@@ -30,71 +30,136 @@
     .container { max-width: 1380px; margin: 0 auto; }
     h1 { font-size: 28px; margin-bottom: 8px; }
     .subtitle { color: var(--color-text-secondary); margin-bottom: 18px; font-size: 14px; }
+
     .student-form, .context-box, .steps-box, .card, .meeting-box {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .student-form, .context-box, .steps-box, .meeting-box { padding: 18px; margin-bottom: 18px; }
+    .student-form, .context-box, .steps-box, .meeting-box {
+      padding: 18px; margin-bottom: 18px;
+    }
+
     .student-grid, .guess-grid, .meeting-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 12px;
       margin-top: 12px;
     }
+
     label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
     input, select {
-      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-border);
-      font-size: 14px; background: white;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--color-border);
+      font-size: 14px;
+      background: white;
     }
+
     .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
     .card { padding: 20px; }
-    .card h2 { font-size: 20px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
     .type-badge {
-      display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
     }
     .badge-mru { background: var(--color-bg-1); color: var(--color-primary); }
     .badge-mua { background: var(--color-bg-2); color: var(--color-warning); }
+
     .mini-context {
-      margin: 8px 0 14px; font-size: 14px; color: var(--color-text-secondary);
-      padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.8); border: 1px solid var(--color-border);
+      margin: 8px 0 14px;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--color-border);
     }
+
     .sim-stage {
-      position: relative; height: 190px; border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border);
+      position: relative;
+      height: 190px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
       background: linear-gradient(to bottom, #eef8fb 0%, #eef8fb 68%, #d9e7d1 68%, #d9e7d1 100%);
       margin-bottom: 14px;
     }
     .track {
-      position: absolute; left: 6%; right: 6%; top: 64%; height: 10px; background: #6b7280; border-radius: 10px;
+      position: absolute;
+      left: 6%; right: 6%; top: 64%;
+      height: 10px;
+      background: #6b7280;
+      border-radius: 10px;
     }
     .object {
-      position: absolute; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 0; border: 2px solid rgba(0,0,0,0.10); box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-      left: 10%; top: 58%; transform: translate(-50%, -50%);
+      position: absolute;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0;
+      border: 2px solid rgba(0,0,0,0.10);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+      left: 10%; top: 58%;
+      transform: translate(-50%, -50%);
     }
     .object.mru { background: #2563eb; }
     .object.mua { background: #f59e0b; }
-    .sim-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+
+    .sim-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
     .meta-box {
-      background: rgba(255,255,255,0.85); border: 1px solid var(--color-border); border-radius: 10px; padding: 10px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 10px;
       font-size: 13px;
     }
     .meta-title { font-size: 12px; color: var(--color-text-secondary); }
     .meta-value { font-size: 18px; font-weight: 700; color: var(--color-text); }
-    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
     button {
-      border: none; border-radius: 10px; padding: 11px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
-      background: var(--color-primary); color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--color-primary);
+      color: white;
     }
     button.secondary { background: #e5eef0; color: var(--color-text); }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; display:none; }
-    th, td { border-bottom: 1px solid var(--color-border); padding: 8px 6px; text-align: center; }
-    th { background: rgba(255,255,255,0.8); }
+
     .guess-panel {
-      margin-top: 16px; padding: 16px; border-radius: 12px; border: 1px dashed var(--color-border); background: rgba(255,255,255,0.85);
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px dashed var(--color-border);
+      background: rgba(255,255,255,0.85);
     }
     .feedback { margin-top: 10px; font-size: 13px; font-weight: 600; }
     .ok { background: var(--color-success-bg); padding: 8px 10px; border-radius: 10px; }
@@ -102,6 +167,7 @@
     .steps-box ol { margin-left: 18px; }
     .steps-box li { margin-bottom: 6px; }
     .small-note { font-size: 12px; color: var(--color-text-secondary); margin-top: 10px; }
+
     .header-bar {
       display: flex;
       align-items: center;
@@ -119,6 +185,8 @@
       padding: 4px;
       border: 1px solid var(--color-border);
     }
+
+    .meeting-box h2 { font-size: 18px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -164,9 +232,10 @@
     </section>
 
     <div class="main-grid">
+      <!-- Panel MRU -->
       <section class="card" id="panel-mru">
         <h2>Movimiento rectilíneo uniforme <span class="type-badge badge-mru">MRU</span></h2>
-        <div class="mini-context">Contexto: un pequeña objeto se desplaza en línea recta con velocidad constante. El estudiante debe determinar la ecuación lineal del movimiento.</div>
+        <div class="mini-context">Contexto: un pequeño objeto se desplaza en línea recta con velocidad constante. El estudiante debe determinar la ecuación lineal del movimiento.</div>
         <div class="sim-stage" data-type="MRU">
           <div class="track"></div>
           <div class="object mru" id="obj-mru"></div>
@@ -181,13 +250,9 @@
           <button class="secondary" onclick="resetCase('MRU')">Nuevo caso</button>
           <button class="secondary" onclick="exportCSV('MRU')">Exportar datos</button>
         </div>
-        <!-- Tabla escondida: sigue existiendo para la exportación pero no se muestra -->
-        <table>
-          <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
-          <tbody id="table-mru"></tbody>
-        </table>
+
         <div class="guess-panel">
-          <h3 style="font-size:16px;">Verificación del modelo MRU </h3>
+          <h3 style="font-size:16px;">Verificación del modelo MRU</h3>
           <div class="guess-grid">
             <div><label>x₀ (m)</label><input type="number" step="0.01" id="mru-x0"></div>
             <div><label>v (m/s)</label><input type="number" step="0.01" id="mru-v"></div>
@@ -200,6 +265,7 @@
         </div>
       </section>
 
+      <!-- Panel MRUA -->
       <section class="card" id="panel-mua">
         <h2>Movimiento rectilineo uniformemente acelerado <span class="type-badge badge-mua">MRUA</span></h2>
         <div class="mini-context">Contexto: un pequeño objeto se desplaza en línea recta con aceleración constante. El estudiante debe determinar la ecuación cuadrática del movimiento.</div>
@@ -217,13 +283,9 @@
           <button class="secondary" onclick="resetCase('MUA')">Nuevo caso</button>
           <button class="secondary" onclick="exportCSV('MUA')">Exportar datos</button>
         </div>
-        <!-- Tabla escondida: sigue existiendo para la exportación pero no se muestra -->
-        <table>
-          <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
-          <tbody id="table-mua"></tbody>
-        </table>
+
         <div class="guess-panel">
-          <h3 style="font-size:16px;">Verificación del modelo MRUA </h3>
+          <h3 style="font-size:16px;">Verificación del modelo MRUA</h3>
           <div class="guess-grid">
             <div><label>x₀ (m)</label><input type="number" step="0.01" id="mua-x0"></div>
             <div><label>v₀ (m/s)</label><input type="number" step="0.01" id="mua-v0"></div>
@@ -238,12 +300,12 @@
       </section>
     </div>
 
-    <!-- Sección diferenciada para el punto de encuentro -->
+    <!-- Sección independiente: Punto de encuentro -->
     <section class="meeting-box">
-      <h2 style="font-size:18px; margin-bottom:8px;">Punto de encuentro de los vehículos</h2>
+      <h2>Punto de encuentro de los vehículos</h2>
       <p class="small-note">
         A partir de los modelos que construyó para MRU y MRUA, determine si los dos móviles se encuentran.
-        Si hay encuentro, registre el tiempo y la posición. Si no existe encuentro físicamente válido,
+        Si hay encuentro, registre el tiempo (s) y la posición (m). Si no existe encuentro físicamente válido,
         use la convención <strong>NA</strong> (No aplica / No hay encuentro).
       </p>
       <div class="meeting-grid">
@@ -260,10 +322,7 @@
   </div>
 
   <script>
-    const appState = {
-      MRU: {},
-      MUA: {}
-    };
+    const appState = { MRU: {}, MUA: {} };
 
     function rand(min, max) { return Math.random() * (max - min) + min; }
     function round2(n) { return Math.round(n * 100) / 100; }
@@ -295,8 +354,6 @@
     function initAll() {
       appState.MRU = makeCase('MRU');
       appState.MUA = makeCase('MUA');
-      renderTable('MRU');
-      renderTable('MUA');
       updateMeta('MRU', 0, appState.MRU.x0, 'Listo');
       updateMeta('MUA', 0, appState.MUA.x0, 'Listo');
       positionObject('MRU', 0);
@@ -321,17 +378,6 @@
       obj.style.top = `58%`;
     }
 
-    function renderTable(type) {
-      const body = $(`table-${type.toLowerCase()}`);
-      body.innerHTML = '';
-      const rows = appState[type].rows.slice(0, 12);
-      rows.forEach(r => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${r.t.toFixed(1)}</td><td>${r.x.toFixed(2)}</td><td>${r.v.toFixed(2)}</td><td>${r.a.toFixed(2)}</td>`;
-        body.appendChild(tr);
-      });
-    }
-
     function runSimulation(type) {
       const st = appState[type];
       if (st.running) return;
@@ -340,7 +386,6 @@
       let i = 0;
       const total = 20;
       updateMeta(type, 0, st.x0, 'En ejecución');
-      renderTable(type);
       clearInterval(st.timer);
       st.timer = setInterval(() => {
         const t = i * 0.5;
@@ -358,7 +403,6 @@
         st.rows.push(row);
         updateMeta(type, t, row.x, i === total ? 'Finalizado' : 'En ejecución');
         positionObject(type, row.x);
-        renderTable(type);
         i++;
         if (i > total) {
           clearInterval(st.timer);
@@ -371,7 +415,6 @@
     function resetCase(type) {
       clearInterval(appState[type].timer);
       appState[type] = makeCase(type);
-      renderTable(type);
       updateMeta(type, 0, appState[type].x0, 'Listo');
       positionObject(type, 0);
       resetVerificationUI(type);
@@ -408,12 +451,17 @@
       if (type === 'MRU') {
         const x0 = parseFloat($('mru-x0').value);
         const v = parseFloat($('mru-v').value);
-        ok = !Number.isNaN(x0) && !Number.isNaN(v) && Math.abs(x0 - st.x0) <= 0.35 && Math.abs(v - st.v) <= 0.25;
+        ok = !Number.isNaN(x0) && !Number.isNaN(v) &&
+             Math.abs(x0 - st.x0) <= 0.35 &&
+             Math.abs(v - st.v) <= 0.25;
       } else {
         const x0 = parseFloat($('mua-x0').value);
         const v0 = parseFloat($('mua-v0').value);
         const a = parseFloat($('mua-a').value);
-        ok = !Number.isNaN(x0) && !Number.isNaN(v0) && !Number.isNaN(a) && Math.abs(x0 - st.x0) <= 0.35 && Math.abs(v0 - st.v0) <= 0.25 && Math.abs(a - st.a) <= 0.20;
+        ok = !Number.isNaN(x0) && !Number.isNaN(v0) && !Number.isNaN(a) &&
+             Math.abs(x0 - st.x0) <= 0.35 &&
+             Math.abs(v0 - st.v0) <= 0.25 &&
+             Math.abs(a - st.a) <= 0.20;
       }
       if (ok) {
         feedback.innerHTML = '<div class="ok">Correcto. El modelo propuesto reproduce el movimiento dentro de la tolerancia permitida.</div>';
@@ -454,10 +502,17 @@
       const id = $('studentId').value.trim();
       const meetingTime = $('meetingTime').value.trim();
       const meetingPos = $('meetingPos').value.trim();
-      const lines = ['nombre,cedula,tipo_movimiento,punto_encuentro_t_s,punto_encuentro_x_m,t_s,x_m,v_m_s,a_m_s2'];
+
+      const lines = [
+        'nombre,cedula,tipo_movimiento,punto_encuentro_t_s,punto_encuentro_x_m,t_s,x_m,v_m_s,a_m_s2'
+      ];
       st.rows.forEach(r => {
-        lines.push(`"${name}","${id}","${type}","${meetingTime}","${meetingPos}",${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`);
+        lines.push(
+          `"${name}","${id}","${type}","${meetingTime}","${meetingPos}",` +
+          `${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`
+        );
       });
+
       const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
