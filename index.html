@@ -30,14 +30,14 @@
     .container { max-width: 1380px; margin: 0 auto; }
     h1 { font-size: 28px; margin-bottom: 8px; }
     .subtitle { color: var(--color-text-secondary); margin-bottom: 18px; font-size: 14px; }
-    .student-form, .context-box, .steps-box, .card {
+    .student-form, .context-box, .steps-box, .card, .meeting-box {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .student-form, .context-box, .steps-box { padding: 18px; margin-bottom: 18px; }
-    .student-grid, .guess-grid {
+    .student-form, .context-box, .steps-box, .meeting-box { padding: 18px; margin-bottom: 18px; }
+    .student-grid, .guess-grid, .meeting-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 12px;
@@ -90,7 +90,7 @@
     }
     button.secondary { background: #e5eef0; color: var(--color-text); }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; display:none; }
     th, td { border-bottom: 1px solid var(--color-border); padding: 8px 6px; text-align: center; }
     th { background: rgba(255,255,255,0.8); }
     .guess-panel {
@@ -102,7 +102,6 @@
     .steps-box ol { margin-left: 18px; }
     .steps-box li { margin-bottom: 6px; }
     .small-note { font-size: 12px; color: var(--color-text-secondary); margin-top: 10px; }
-  
     .header-bar {
       display: flex;
       align-items: center;
@@ -120,8 +119,7 @@
       padding: 4px;
       border: 1px solid var(--color-border);
     }
-
-</style>
+  </style>
 </head>
 <body>
   <div class="container">
@@ -160,6 +158,7 @@
         <li>Exporte la tabla de datos de cada uno de los casos : MRU y MUA.</li>
         <li>Construya la gráfica posición-tiempo y ajuste el modelo correspondiente a cada movimiento.</li>
         <li>Obtenga los coeficientes de cada modelo e ingréselos en las casillas: Verificación del Modelo.</li>
+        <li>Determine si hay punto de encuentro entre los vehículos y, de existir, calcule el tiempo (s) y la distancia (m); si no existe, registre NA.</li>
         <li>Dispone de 3 intentos por cada movimiento; después de eso deberá reiniciar el caso.</li>
       </ol>
     </section>
@@ -182,6 +181,7 @@
           <button class="secondary" onclick="resetCase('MRU')">Nuevo caso</button>
           <button class="secondary" onclick="exportCSV('MRU')">Exportar datos</button>
         </div>
+        <!-- Tabla escondida: sigue existiendo para la exportación pero no se muestra -->
         <table>
           <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
           <tbody id="table-mru"></tbody>
@@ -217,6 +217,7 @@
           <button class="secondary" onclick="resetCase('MUA')">Nuevo caso</button>
           <button class="secondary" onclick="exportCSV('MUA')">Exportar datos</button>
         </div>
+        <!-- Tabla escondida: sigue existiendo para la exportación pero no se muestra -->
         <table>
           <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
           <tbody id="table-mua"></tbody>
@@ -236,6 +237,26 @@
         </div>
       </section>
     </div>
+
+    <!-- Sección diferenciada para el punto de encuentro -->
+    <section class="meeting-box">
+      <h2 style="font-size:18px; margin-bottom:8px;">Punto de encuentro de los vehículos</h2>
+      <p class="small-note">
+        A partir de los modelos que construyó para MRU y MRUA, determine si los dos móviles se encuentran.
+        Si hay encuentro, registre el tiempo y la posición. Si no existe encuentro físicamente válido,
+        use la convención <strong>NA</strong> (No aplica / No hay encuentro).
+      </p>
+      <div class="meeting-grid">
+        <div>
+          <label for="meetingTime">Tiempo de encuentro (s)</label>
+          <input id="meetingTime" type="text" placeholder="Ej. 3.25 o NA" />
+        </div>
+        <div>
+          <label for="meetingPos">Distancia/posición de encuentro (m)</label>
+          <input id="meetingPos" type="text" placeholder="Ej. 8.40 o NA" />
+        </div>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -282,6 +303,8 @@
       positionObject('MUA', 0);
       resetVerificationUI('MRU');
       resetVerificationUI('MUA');
+      $('meetingTime').value = '';
+      $('meetingPos').value = '';
     }
 
     function updateMeta(type, t, x, stateTxt) {
@@ -294,13 +317,8 @@
       const obj = $(`obj-${type.toLowerCase()}`);
       const min = -10, max = 20;
       const ratio = Math.max(0, Math.min(1, (x - min) / (max - min)));
-      if (type === 'MRU') {
-        obj.style.left = `${10 + ratio * 78}%`;
-        obj.style.top = `58%`;
-      } else {
-        obj.style.left = `${10 + ratio * 78}%`;
-        obj.style.top = `58%`;
-      }
+      obj.style.left = `${10 + ratio * 78}%`;
+      obj.style.top = `58%`;
     }
 
     function renderTable(type) {
@@ -378,6 +396,7 @@
       btn.disabled = false;
       $(`feedback-${prefix}`).innerHTML = '';
       $(`attempts-${prefix}`).textContent = 'Intentos disponibles: 3';
+      appState[type].attempts = 0;
     }
 
     function checkModel(type) {
@@ -433,9 +452,11 @@
       }
       const name = $('studentName').value.trim();
       const id = $('studentId').value.trim();
-      const lines = ['nombre,cedula,tipo_movimiento,t_s,x_m,v_m_s,a_m_s2'];
+      const meetingTime = $('meetingTime').value.trim();
+      const meetingPos = $('meetingPos').value.trim();
+      const lines = ['nombre,cedula,tipo_movimiento,punto_encuentro_t_s,punto_encuentro_x_m,t_s,x_m,v_m_s,a_m_s2'];
       st.rows.forEach(r => {
-        lines.push(`"${name}","${id}","${type}",${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`);
+        lines.push(`"${name}","${id}","${type}","${meetingTime}","${meetingPos}",${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`);
       });
       const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
