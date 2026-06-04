@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulador Actividad 4 - MRU y MUA</title>
+  <title>Simulador- MRU y MUA - Física General</title>
   <style>
     :root {
       --color-background: #ffffff;
@@ -127,8 +127,8 @@
   <div class="container">
     <div class="header-bar">
       <div>
-        <h1>Simulador de modelado cinemático UNAD</h1>
-        <p class="subtitle">Simulador rediseñado para observar un movimiento, exportar datos, ajustar un modelo y verificar coeficientes sin exponer los parámetros reales.</p>
+        <h1>SIMULADOR CINEMÁTICO UNAD</h1>
+        <p class="subtitle">Simulador para observar un movimiento, exportar datos, ajustar un modelo y verificar tus conocimientos</p>
       </div>
       <img src="../UNAD.png" alt="Logo UNAD" class="header-logo" />
     </div>
@@ -148,8 +148,8 @@
     </section>
 
     <section class="context-box">
-      <strong>Contexto didáctico.</strong> En MRU se modela el desplazamiento de un objeto que avanza con velocidad constante en línea recta. En MUA se modela un carrito sobre un plano inclinado con fricción despreciable, asumiendo aceleración constante y aplicando las ecuaciones de movimiento uniformemente acelerado.
-      <div class="small-note">Los parámetros son ocultos y aleatorios. El estudiante debe observar, exportar la tabla y reconstruir el modelo matemático.</div>
+      <strong>Contexto didáctico.</strong> En MRU se modela el desplazamiento de un objeto que avanza con velocidad constante en línea recta. En MRUA se modela un objeto que acelera constantemente en línea recta.
+      <div class="small-note">Los parámetros son ocultos y aleatorios. Debes observar, exportar los datos y reconstruir el modelo matemático.</div>
     </section>
 
     <section class="steps-box">
@@ -157,17 +157,17 @@
       <ol>
         <li>Registre su nombre y cédula.</li>
         <li>Observe el movimiento en cada panel y ejecute la simulación las veces necesarias.</li>
-        <li>Exporte la tabla de datos de cada caso.</li>
-        <li>Construya la gráfica posición-tiempo y ajuste el modelo correspondiente.</li>
-        <li>Obtenga los coeficientes del modelo e ingréselos en la verificación.</li>
-        <li>Dispone de 3 intentos por panel; después de eso deberá reiniciar el caso.</li>
+        <li>Exporte la tabla de datos de cada uno de los casos : MRU y MUA.</li>
+        <li>Construya la gráfica posición-tiempo y ajuste el modelo correspondiente a cada movimiento.</li>
+        <li>Obtenga los coeficientes de cada modelo e ingréselos en las casillas: Verificación del Modelo.</li>
+        <li>Dispone de 3 intentos por cada movimiento; después de eso deberá reiniciar el caso.</li>
       </ol>
     </section>
 
     <div class="main-grid">
       <section class="card" id="panel-mru">
         <h2>Movimiento rectilíneo uniforme <span class="type-badge badge-mru">MRU</span></h2>
-        <div class="mini-context">Contexto: una pequeña pelota o móvil se desplaza en línea recta con velocidad constante. El estudiante debe determinar la ecuación lineal del movimiento.</div>
+        <div class="mini-context">Contexto: un pequeña objeto se desplaza en línea recta con velocidad constante. El estudiante debe determinar la ecuación lineal del movimiento.</div>
         <div class="sim-stage" data-type="MRU">
           <div class="track"></div>
           <div class="object mru" id="obj-mru"></div>
@@ -187,13 +187,13 @@
           <tbody id="table-mru"></tbody>
         </table>
         <div class="guess-panel">
-          <h3 style="font-size:16px;">Verificación del modelo propuesto</h3>
+          <h3 style="font-size:16px;">Verificación del modelo MRU </h3>
           <div class="guess-grid">
             <div><label>x₀ (m)</label><input type="number" step="0.01" id="mru-x0"></div>
             <div><label>v (m/s)</label><input type="number" step="0.01" id="mru-v"></div>
           </div>
           <div class="btn-row" style="margin-top:12px; margin-bottom:0;">
-            <button onclick="checkModel('MRU')">Verificar coeficientes</button>
+            <button onclick="checkModel('MRU')">Comprobar Respuesta</button>
           </div>
           <div class="small-note" id="attempts-mru">Intentos disponibles: 3</div>
           <div class="feedback" id="feedback-mru"></div>
@@ -201,8 +201,8 @@
       </section>
 
       <section class="card" id="panel-mua">
-        <h2>Movimiento uniformemente acelerado <span class="type-badge badge-mua">MUA</span></h2>
-        <div class="mini-context">Contexto: una pequeña pelota o móvil se desplaza en línea recta con aceleración constante. El estudiante debe determinar la ecuación cuadrática del movimiento.</div>
+        <h2>Movimiento rectilineo uniformemente acelerado <span class="type-badge badge-mua">MRUA</span></h2>
+        <div class="mini-context">Contexto: un pequeño objeto se desplaza en línea recta con aceleración constante. El estudiante debe determinar la ecuación cuadrática del movimiento.</div>
         <div class="sim-stage" data-type="MUA">
           <div class="track"></div>
           <div class="object mua" id="obj-mua"></div>
@@ -222,14 +222,14 @@
           <tbody id="table-mua"></tbody>
         </table>
         <div class="guess-panel">
-          <h3 style="font-size:16px;">Verificación del modelo propuesto</h3>
+          <h3 style="font-size:16px;">Verificación del modelo MRUA </h3>
           <div class="guess-grid">
             <div><label>x₀ (m)</label><input type="number" step="0.01" id="mua-x0"></div>
             <div><label>v₀ (m/s)</label><input type="number" step="0.01" id="mua-v0"></div>
             <div><label>a (m/s²)</label><input type="number" step="0.01" id="mua-a"></div>
           </div>
           <div class="btn-row" style="margin-top:12px; margin-bottom:0;">
-            <button onclick="checkModel('MUA')">Verificar coeficientes</button>
+            <button onclick="checkModel('MUA')">Comprobar Respuesta</button>
           </div>
           <div class="small-note" id="attempts-mua">Intentos disponibles: 3</div>
           <div class="feedback" id="feedback-mua"></div>
