@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador Actividad 4 - MRU y MUA</title>
+  <style>
+    :root {
+      --color-background: #ffffff;
+      --color-surface: #f8f9fa;
+      --color-text: #13343b;
+      --color-text-secondary: #626c71;
+      --color-primary: #21808d;
+      --color-primary-hover: #1d7480;
+      --color-border: rgba(94, 82, 64, 0.2);
+      --color-warning: #a84b2f;
+      --color-bg-1: rgba(59, 130, 246, 0.08);
+      --color-bg-2: rgba(245, 158, 11, 0.08);
+      --color-success-bg: rgba(34, 197, 94, 0.10);
+      --color-error-bg: rgba(239, 68, 68, 0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--color-background);
+      color: var(--color-text);
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 1380px; margin: 0 auto; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { color: var(--color-text-secondary); margin-bottom: 18px; font-size: 14px; }
+    .student-form, .context-box, .steps-box, .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .student-form, .context-box, .steps-box { padding: 18px; margin-bottom: 18px; }
+    .student-grid, .guess-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    input, select {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-border);
+      font-size: 14px; background: white;
+    }
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+    .card { padding: 20px; }
+    .card h2 { font-size: 20px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
+    .type-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .badge-mru { background: var(--color-bg-1); color: var(--color-primary); }
+    .badge-mua { background: var(--color-bg-2); color: var(--color-warning); }
+    .mini-context {
+      margin: 8px 0 14px; font-size: 14px; color: var(--color-text-secondary);
+      padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.8); border: 1px solid var(--color-border);
+    }
+    .sim-stage {
+      position: relative; height: 190px; border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border);
+      background: linear-gradient(to bottom, #eef8fb 0%, #eef8fb 68%, #d9e7d1 68%, #d9e7d1 100%);
+      margin-bottom: 14px;
+    }
+    .track {
+      position: absolute; left: 6%; right: 6%; top: 64%; height: 10px; background: #6b7280; border-radius: 10px;
+    }
+    .object {
+      position: absolute; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0; border: 2px solid rgba(0,0,0,0.10); box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+      left: 10%; top: 58%; transform: translate(-50%, -50%);
+    }
+    .object.mru { background: #2563eb; }
+    .object.mua { background: #f59e0b; }
+    .sim-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .meta-box {
+      background: rgba(255,255,255,0.85); border: 1px solid var(--color-border); border-radius: 10px; padding: 10px;
+      font-size: 13px;
+    }
+    .meta-title { font-size: 12px; color: var(--color-text-secondary); }
+    .meta-value { font-size: 18px; font-weight: 700; color: var(--color-text); }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    button {
+      border: none; border-radius: 10px; padding: 11px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+      background: var(--color-primary); color: white;
+    }
+    button.secondary { background: #e5eef0; color: var(--color-text); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    th, td { border-bottom: 1px solid var(--color-border); padding: 8px 6px; text-align: center; }
+    th { background: rgba(255,255,255,0.8); }
+    .guess-panel {
+      margin-top: 16px; padding: 16px; border-radius: 12px; border: 1px dashed var(--color-border); background: rgba(255,255,255,0.85);
+    }
+    .feedback { margin-top: 10px; font-size: 13px; font-weight: 600; }
+    .ok { background: var(--color-success-bg); padding: 8px 10px; border-radius: 10px; }
+    .bad { background: var(--color-error-bg); padding: 8px 10px; border-radius: 10px; }
+    .steps-box ol { margin-left: 18px; }
+    .steps-box li { margin-bottom: 6px; }
+    .small-note { font-size: 12px; color: var(--color-text-secondary); margin-top: 10px; }
+  
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .header-logo {
+      width: 120px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px;
+      border: 1px solid var(--color-border);
+    }
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-bar">
+      <div>
+        <h1>Simulador de modelado cinemático UNAD</h1>
+        <p class="subtitle">Simulador rediseñado para observar un movimiento, exportar datos, ajustar un modelo y verificar coeficientes sin exponer los parámetros reales.</p>
+      </div>
+      <img src="../UNAD.jpg" alt="Logo UNAD" class="header-logo" />
+    </div>
+
+    <section class="student-form">
+      <h2 style="font-size:18px; margin-bottom:8px;">Datos del estudiante</h2>
+      <div class="student-grid">
+        <div>
+          <label for="studentName">Nombre completo</label>
+          <input id="studentName" type="text" placeholder="Ej. Pepita Perez" />
+        </div>
+        <div>
+          <label for="studentId">Cédula</label>
+          <input id="studentId" type="text" placeholder="Ej. 19999999" />
+        </div>
+      </div>
+    </section>
+
+    <section class="context-box">
+      <strong>Contexto didáctico.</strong> En MRU se modela el desplazamiento de un objeto que avanza con velocidad constante en línea recta. En MUA se modela un carrito sobre un plano inclinado con fricción despreciable, asumiendo aceleración constante y aplicando las ecuaciones de movimiento uniformemente acelerado.
+      <div class="small-note">Los parámetros son ocultos y aleatorios. El estudiante debe observar, exportar la tabla y reconstruir el modelo matemático.</div>
+    </section>
+
+    <section class="steps-box">
+      <h2 style="font-size:18px; margin-bottom:8px;">Paso a paso sugerido</h2>
+      <ol>
+        <li>Registre su nombre y cédula.</li>
+        <li>Observe el movimiento en cada panel y ejecute la simulación las veces necesarias.</li>
+        <li>Exporte la tabla de datos de cada caso.</li>
+        <li>Construya la gráfica posición-tiempo y ajuste el modelo correspondiente.</li>
+        <li>Obtenga los coeficientes del modelo e ingréselos en la verificación.</li>
+        <li>Dispone de 3 intentos por panel; después de eso deberá reiniciar el caso.</li>
+      </ol>
+    </section>
+
+    <div class="main-grid">
+      <section class="card" id="panel-mru">
+        <h2>Movimiento rectilíneo uniforme <span class="type-badge badge-mru">MRU</span></h2>
+        <div class="mini-context">Contexto: una pequeña pelota o móvil se desplaza en línea recta con velocidad constante. El estudiante debe determinar la ecuación lineal del movimiento.</div>
+        <div class="sim-stage" data-type="MRU">
+          <div class="track"></div>
+          <div class="object mru" id="obj-mru"></div>
+        </div>
+        <div class="sim-meta">
+          <div class="meta-box"><div class="meta-title">Tiempo</div><div class="meta-value" id="time-mru">0.0 s</div></div>
+          <div class="meta-box"><div class="meta-title">Posición</div><div class="meta-value" id="pos-mru">0.00 m</div></div>
+          <div class="meta-box"><div class="meta-title">Estado</div><div class="meta-value" id="state-mru">Listo</div></div>
+        </div>
+        <div class="btn-row">
+          <button onclick="runSimulation('MRU')">Iniciar simulación</button>
+          <button class="secondary" onclick="resetCase('MRU')">Nuevo caso</button>
+          <button class="secondary" onclick="exportCSV('MRU')">Exportar datos</button>
+        </div>
+        <table>
+          <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
+          <tbody id="table-mru"></tbody>
+        </table>
+        <div class="guess-panel">
+          <h3 style="font-size:16px;">Verificación del modelo propuesto</h3>
+          <div class="guess-grid">
+            <div><label>x₀ (m)</label><input type="number" step="0.01" id="mru-x0"></div>
+            <div><label>v (m/s)</label><input type="number" step="0.01" id="mru-v"></div>
+          </div>
+          <div class="btn-row" style="margin-top:12px; margin-bottom:0;">
+            <button onclick="checkModel('MRU')">Verificar coeficientes</button>
+          </div>
+          <div class="small-note" id="attempts-mru">Intentos disponibles: 3</div>
+          <div class="feedback" id="feedback-mru"></div>
+        </div>
+      </section>
+
+      <section class="card" id="panel-mua">
+        <h2>Movimiento uniformemente acelerado <span class="type-badge badge-mua">MUA</span></h2>
+        <div class="mini-context">Contexto: una pequeña pelota o móvil se desplaza en línea recta con aceleración constante. El estudiante debe determinar la ecuación cuadrática del movimiento.</div>
+        <div class="sim-stage" data-type="MUA">
+          <div class="track"></div>
+          <div class="object mua" id="obj-mua"></div>
+        </div>
+        <div class="sim-meta">
+          <div class="meta-box"><div class="meta-title">Tiempo</div><div class="meta-value" id="time-mua">0.0 s</div></div>
+          <div class="meta-box"><div class="meta-title">Posición</div><div class="meta-value" id="pos-mua">0.00 m</div></div>
+          <div class="meta-box"><div class="meta-title">Estado</div><div class="meta-value" id="state-mua">Listo</div></div>
+        </div>
+        <div class="btn-row">
+          <button onclick="runSimulation('MUA')">Iniciar simulación</button>
+          <button class="secondary" onclick="resetCase('MUA')">Nuevo caso</button>
+          <button class="secondary" onclick="exportCSV('MUA')">Exportar datos</button>
+        </div>
+        <table>
+          <thead><tr><th>t (s)</th><th>x (m)</th><th>v (m/s)</th><th>a (m/s²)</th></tr></thead>
+          <tbody id="table-mua"></tbody>
+        </table>
+        <div class="guess-panel">
+          <h3 style="font-size:16px;">Verificación del modelo propuesto</h3>
+          <div class="guess-grid">
+            <div><label>x₀ (m)</label><input type="number" step="0.01" id="mua-x0"></div>
+            <div><label>v₀ (m/s)</label><input type="number" step="0.01" id="mua-v0"></div>
+            <div><label>a (m/s²)</label><input type="number" step="0.01" id="mua-a"></div>
+          </div>
+          <div class="btn-row" style="margin-top:12px; margin-bottom:0;">
+            <button onclick="checkModel('MUA')">Verificar coeficientes</button>
+          </div>
+          <div class="small-note" id="attempts-mua">Intentos disponibles: 3</div>
+          <div class="feedback" id="feedback-mua"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const appState = {
+      MRU: {},
+      MUA: {}
+    };
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+    function round2(n) { return Math.round(n * 100) / 100; }
+    function $(id) { return document.getElementById(id); }
+
+    function makeCase(type) {
+      if (type === 'MRU') {
+        return {
+          x0: round2(rand(-6, 6)),
+          v: round2(rand(0.8, 4.5) * (Math.random() > 0.2 ? 1 : -1)),
+          a: 0,
+          rows: [],
+          attempts: 0,
+          running: false,
+          timer: null
+        };
+      }
+      return {
+        x0: round2(rand(-4, 4)),
+        v0: round2(rand(-1, 3.5)),
+        a: round2(rand(0.4, 2.2)),
+        rows: [],
+        attempts: 0,
+        running: false,
+        timer: null
+      };
+    }
+
+    function initAll() {
+      appState.MRU = makeCase('MRU');
+      appState.MUA = makeCase('MUA');
+      renderTable('MRU');
+      renderTable('MUA');
+      updateMeta('MRU', 0, appState.MRU.x0, 'Listo');
+      updateMeta('MUA', 0, appState.MUA.x0, 'Listo');
+      positionObject('MRU', 0);
+      positionObject('MUA', 0);
+      resetVerificationUI('MRU');
+      resetVerificationUI('MUA');
+    }
+
+    function updateMeta(type, t, x, stateTxt) {
+      $(`time-${type.toLowerCase()}`).textContent = `${t.toFixed(1)} s`;
+      $(`pos-${type.toLowerCase()}`).textContent = `${x.toFixed(2)} m`;
+      $(`state-${type.toLowerCase()}`).textContent = stateTxt;
+    }
+
+    function positionObject(type, x) {
+      const obj = $(`obj-${type.toLowerCase()}`);
+      const min = -10, max = 20;
+      const ratio = Math.max(0, Math.min(1, (x - min) / (max - min)));
+      if (type === 'MRU') {
+        obj.style.left = `${10 + ratio * 78}%`;
+        obj.style.top = `58%`;
+      } else {
+        obj.style.left = `${10 + ratio * 78}%`;
+        obj.style.top = `58%`;
+      }
+    }
+
+    function renderTable(type) {
+      const body = $(`table-${type.toLowerCase()}`);
+      body.innerHTML = '';
+      const rows = appState[type].rows.slice(0, 12);
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.t.toFixed(1)}</td><td>${r.x.toFixed(2)}</td><td>${r.v.toFixed(2)}</td><td>${r.a.toFixed(2)}</td>`;
+        body.appendChild(tr);
+      });
+    }
+
+    function runSimulation(type) {
+      const st = appState[type];
+      if (st.running) return;
+      st.rows = [];
+      st.running = true;
+      let i = 0;
+      const total = 20;
+      updateMeta(type, 0, st.x0, 'En ejecución');
+      renderTable(type);
+      clearInterval(st.timer);
+      st.timer = setInterval(() => {
+        const t = i * 0.5;
+        let x, v, a;
+        if (type === 'MRU') {
+          x = st.x0 + st.v * t;
+          v = st.v;
+          a = 0;
+        } else {
+          x = st.x0 + st.v0 * t + 0.5 * st.a * t * t;
+          v = st.v0 + st.a * t;
+          a = st.a;
+        }
+        const row = { t, x: round2(x), v: round2(v), a: round2(a) };
+        st.rows.push(row);
+        updateMeta(type, t, row.x, i === total ? 'Finalizado' : 'En ejecución');
+        positionObject(type, row.x);
+        renderTable(type);
+        i++;
+        if (i > total) {
+          clearInterval(st.timer);
+          st.running = false;
+          updateMeta(type, t, row.x, 'Finalizado');
+        }
+      }, 320);
+    }
+
+    function resetCase(type) {
+      clearInterval(appState[type].timer);
+      appState[type] = makeCase(type);
+      renderTable(type);
+      updateMeta(type, 0, appState[type].x0, 'Listo');
+      positionObject(type, 0);
+      resetVerificationUI(type);
+    }
+
+    function resetVerificationUI(type) {
+      const prefix = type.toLowerCase();
+      if (type === 'MRU') {
+        $('mru-x0').value = '';
+        $('mru-v').value = '';
+        $('mru-x0').disabled = false;
+        $('mru-v').disabled = false;
+      } else {
+        $('mua-x0').value = '';
+        $('mua-v0').value = '';
+        $('mua-a').value = '';
+        $('mua-x0').disabled = false;
+        $('mua-v0').disabled = false;
+        $('mua-a').disabled = false;
+      }
+      const btn = document.querySelector(`#panel-${prefix} .guess-panel button`);
+      btn.disabled = false;
+      $(`feedback-${prefix}`).innerHTML = '';
+      $(`attempts-${prefix}`).textContent = 'Intentos disponibles: 3';
+    }
+
+    function checkModel(type) {
+      const st = appState[type];
+      const feedback = $(`feedback-${type.toLowerCase()}`);
+      const attemptsLabel = $(`attempts-${type.toLowerCase()}`);
+      if (st.attempts >= 3) return;
+      let ok = false;
+      if (type === 'MRU') {
+        const x0 = parseFloat($('mru-x0').value);
+        const v = parseFloat($('mru-v').value);
+        ok = !Number.isNaN(x0) && !Number.isNaN(v) && Math.abs(x0 - st.x0) <= 0.35 && Math.abs(v - st.v) <= 0.25;
+      } else {
+        const x0 = parseFloat($('mua-x0').value);
+        const v0 = parseFloat($('mua-v0').value);
+        const a = parseFloat($('mua-a').value);
+        ok = !Number.isNaN(x0) && !Number.isNaN(v0) && !Number.isNaN(a) && Math.abs(x0 - st.x0) <= 0.35 && Math.abs(v0 - st.v0) <= 0.25 && Math.abs(a - st.a) <= 0.20;
+      }
+      if (ok) {
+        feedback.innerHTML = '<div class="ok">Correcto. El modelo propuesto reproduce el movimiento dentro de la tolerancia permitida.</div>';
+        document.querySelector(`#panel-${type.toLowerCase()} .guess-panel button`).disabled = true;
+        return;
+      }
+      st.attempts += 1;
+      const left = 3 - st.attempts;
+      if (left > 0) {
+        feedback.innerHTML = '<div class="bad">Incorrecto. Revise su tabla exportada, la gráfica y el ajuste del modelo antes de intentar nuevamente.</div>';
+        attemptsLabel.textContent = `Intentos disponibles: ${left}`;
+      } else {
+        feedback.innerHTML = '<div class="bad">Ha agotado los 3 intentos. Para continuar debe generar un nuevo caso y repetir el proceso de observación, exportación y análisis.</div>';
+        attemptsLabel.textContent = 'Intentos disponibles: 0';
+        lockInputs(type);
+      }
+    }
+
+    function lockInputs(type) {
+      if (type === 'MRU') {
+        $('mru-x0').disabled = true;
+        $('mru-v').disabled = true;
+      } else {
+        $('mua-x0').disabled = true;
+        $('mua-v0').disabled = true;
+        $('mua-a').disabled = true;
+      }
+      document.querySelector(`#panel-${type.toLowerCase()} .guess-panel button`).disabled = true;
+    }
+
+    function exportCSV(type) {
+      const st = appState[type];
+      if (!st.rows.length) {
+        alert('Primero ejecute la simulación para generar datos.');
+        return;
+      }
+      const name = $('studentName').value.trim();
+      const id = $('studentId').value.trim();
+      const lines = ['nombre,cedula,tipo_movimiento,t_s,x_m,v_m_s,a_m_s2'];
+      st.rows.forEach(r => {
+        lines.push(`"${name}","${id}","${type}",${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`);
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `actividad4_${type.toLowerCase()}_${id || 'estudiante'}.csv`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    initAll();
+  </script>
+</body>
+</html>
