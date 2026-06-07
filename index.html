@@ -491,6 +491,16 @@
       }
       document.querySelector(`#panel-${type.toLowerCase()} .guess-panel button`).disabled = true;
     }
+    
+    function sanitizeFilePart(text, fallback) {
+      const value = (text || '').trim();
+      if (!value) return fallback;
+      return value
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9_-]+/g, '_')
+      .replace(/^_+|_+$/g, '') || fallback;
+    }
+    
 
     function exportCSV(type) {
       const st = appState[type];
@@ -498,25 +508,21 @@
         alert('Primero ejecute la simulación para generar datos.');
         return;
       }
-      const name = $('studentName').value.trim();
-      const id = $('studentId').value.trim();
-      const meetingTime = $('meetingTime').value.trim();
-      const meetingPos = $('meetingPos').value.trim();
-
-      const lines = [
-        'nombre,cedula,tipo_movimiento,punto_encuentro_t_s,punto_encuentro_x_m,t_s,x_m,v_m_s,a_m_s2'
-      ];
+      const rawName = $('studentName').value.trim();
+      const rawId = $('studentId').value.trim();
+      
+      const safeName = sanitizeFilePart(rawName, 'estudiante');
+      const safeId = sanitizeFilePart(rawId, 'ID');
+      
+      const movementLabel = type === 'MUA' ? 'MRUA' : type;
+      const lines = ['t_s,x_m'];
       st.rows.forEach(r => {
-        lines.push(
-          `"${name}","${id}","${type}","${meetingTime}","${meetingPos}",` +
-          `${r.t.toFixed(1)},${r.x.toFixed(2)},${r.v.toFixed(2)},${r.a.toFixed(2)}`
-        );
+        lines.push(`${r.t.toFixed(1)},${r.x.toFixed(2)}`);
       });
-
       const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `actividad4_${type.toLowerCase()}_${id || 'estudiante'}.csv`;
+      a.download = `movimiento_${movementLabel}_${safeName}_${safeId}.csv`;
       a.click();
       URL.revokeObjectURL(a.href);
     }
